@@ -1,0 +1,16 @@
+setwd("~/Work/Professional development/Data Science course/Exploratory Data Analysis")
+library(data.table)
+file <- fread("household_power_consumption.txt", na.strings="?")
+date_time <- strptime(paste(file[,Date], file[,Time], sep = " "), format = "%d/%m/%Y %H:%M:%S")
+file$date_time <- as.POSIXct(date_time)
+data <-subset(file, date_time >= as.POSIXct ('2007-02-01') & date_time < as.POSIXct ('2007-02-03'))
+data <- data[,weekdays:= weekdays(date_time, abbreviate = TRUE)]
+plot(data[,Global_active_power], type = "l", xlab = "", xaxt = "n", ylab = "Global Active Power (kilowatts)")
+Thu <- data[, weekdays == "Thu"]
+sum(Thu)
+nrow(data)
+v1 <- c(0, 1441, 2881)
+v2 <- c("Thu", "Fri", "Sat")
+axis (side = 1, at = v1, labels = v2)
+dev.copy (png, file = "plot2.png")
+dev.off()
